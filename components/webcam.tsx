@@ -1,0 +1,56 @@
+"use client";
+import React, { useCallback, useRef } from "react";
+import Webcam from "react-webcam";
+import { Button } from "./ui/button";
+import { CameraIcon } from "lucide-react";
+import { toast } from "sonner";
+import { useLocalStorage } from 'usehooks-ts'
+import GalleryPhotos from "./gallery";
+
+
+type Photos = {
+    src: string | null;
+    date: Date;
+}
+
+export default function WebCameraComponent() {
+	const videoConstraints = {
+		width: 1280,
+		height: 800,
+		facingMode: "user",
+	};
+	const camera = useRef<Webcam | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [photos, setPhotos, _] = useLocalStorage<Photos[]>("photos", []);
+	const capture = useCallback(() => {
+		const imageSrc = camera.current ? camera.current.getScreenshot() : null;
+        if (photos.length >= 10) {
+			toast.error("You can't take more than 10 photos.");
+			return;
+		}else {
+			setPhotos([...photos, {src: imageSrc, date: new Date()}]);
+        toast.success("Image captured successfully");
+		}
+	}, [camera, photos, setPhotos]);
+
+	return (
+		<div className="relative">
+			<Webcam
+				audio={false}
+				videoConstraints={videoConstraints}
+				screenshotFormat="image/jpeg"
+				ref={camera}
+				className="rounded-md border-2 border-primary/50"
+				onUserMediaError={() => {}}
+				onUserMedia={() => {}}
+				screenshotQuality={1}
+			/>
+			<div className="py-3 px-2 flex justify-center items-center gap-4">
+				<Button onClick={capture} title="Take a picture" size={"camera"}>
+					<CameraIcon size={25} />
+				</Button>
+                {photos.length > 0 && <GalleryPhotos photos={photos}/>}
+			</div>
+		</div>
+	);
+}
