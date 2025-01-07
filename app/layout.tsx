@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import SwitchTheme from "@/components/switch-theme";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react"
 
 const dmSans = DM_Sans({
 	variable: "--font-dm-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
 				>
 					<SwitchTheme />
 					<Toaster richColors closeButton />
+					<Analytics/>
 					{children}
 				</ThemeProvider>
 			</body>
