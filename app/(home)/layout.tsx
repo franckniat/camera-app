@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import React from "react";
+import HeadLink from "@/components/head-link";
 
 export const metadata: Metadata = {
 	title: "Web camera app",
@@ -21,7 +23,12 @@ export default function RootLayout({
 					<span>Back to home</span>
 				</Link>
 			</div>
-			<div className="h-screen flex items-center">{children}</div>
+			<div className="mt-[70px]">
+				<div className={"flex justify-center items-center"}>
+					<HeadLink/>
+				</div>
+				{children}
+			</div>
 		</div>
 	);
 }

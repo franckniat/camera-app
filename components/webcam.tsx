@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useCallback, useRef } from "react";
 import Webcam from "react-webcam";
@@ -6,6 +7,7 @@ import { CameraIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useLocalStorage } from 'usehooks-ts'
 import GalleryPhotos from "./gallery";
+import { useMediaQuery } from 'usehooks-ts'
 
 
 type Photos = {
@@ -19,8 +21,8 @@ export default function WebCameraComponent() {
 		height: 800,
 		facingMode: "user",
 	};
+	const isOnMobile = useMediaQuery('(min-width: 600px)')
 	const camera = useRef<Webcam | null>(null);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [photos, setPhotos, _] = useLocalStorage<Photos[]>("photos", []);
 	const capture = useCallback(() => {
 		const imageSrc = camera.current ? camera.current.getScreenshot() : null;
@@ -40,7 +42,7 @@ export default function WebCameraComponent() {
 				videoConstraints={videoConstraints}
 				screenshotFormat="image/jpeg"
 				ref={camera}
-				className="rounded-md border-2 border-primary/50"
+				className="rounded-md border-2 border-primary/50 max-h-[700px]"
 				onUserMediaError={() => {}}
 				onUserMedia={() => {}}
 				screenshotQuality={1}
