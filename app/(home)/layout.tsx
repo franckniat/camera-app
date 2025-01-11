@@ -17,15 +17,15 @@ export default function RootLayout({
 }>) {
 	return (
 		<div className="max-w-[1280px] mx-auto px-3">
-			<div className="absolute top-5 left-5">
+			<div className="absolute top-3 left-2">
 				<Link href={"/"} className="flex items-center gap-3 hover:bg-foreground/10 px-3 py-2 rounded-md">
 					<ArrowLeft size={18} />
 					<span>Back to home</span>
 				</Link>
 			</div>
-			<div className="mt-[70px]">
+			<div className={"mt-10"}>
 				<div className={"flex justify-center items-center"}>
-					<HeadLink/>
+					<HeadLink />
 				</div>
 				{children}
 			</div>

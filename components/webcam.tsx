@@ -17,8 +17,6 @@ type Photos = {
 
 export default function WebCameraComponent() {
 	const videoConstraints = {
-		width: 1280,
-		height: 800,
 		facingMode: "user",
 	};
 	const isOnMobile = useMediaQuery('(min-width: 600px)')
@@ -36,13 +34,14 @@ export default function WebCameraComponent() {
 	}, [camera, photos, setPhotos]);
 
 	return (
-		<div className="relative">
+		<div className={"flex flex-col gap-4 items-center"}>
 			<Webcam
 				audio={false}
 				videoConstraints={videoConstraints}
 				screenshotFormat="image/jpeg"
 				ref={camera}
-				className="rounded-md border-2 border-primary/50 max-h-[700px]"
+				className="rounded-md border-2 border-primary/50 max-h-[calc(100vh-200px)] sm:max-h-[calc(100vh-100px)]"
+				style={{ height : isOnMobile ? "700px" : "500px"}}
 				onUserMediaError={() => {}}
 				onUserMedia={() => {}}
 				screenshotQuality={1}

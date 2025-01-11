@@ -4,7 +4,7 @@ import Webcam from "react-webcam";
 import {Button} from "@/components/ui/button";
 import {CirclePlay, CircleStop} from "lucide-react";
 import GalleryVideos from "@/components/gallery-video";
-import {useLocalStorage} from "usehooks-ts";
+import {useLocalStorage, useMediaQuery} from "usehooks-ts";
 
 type Videos = {
     src: string | null;
@@ -14,6 +14,7 @@ type Videos = {
 export default function WebcamVideo() {
     const webcamRef = React.useRef<Webcam | null>(null);
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
+    const isOnMobile = useMediaQuery('(min-width: 600px)')
     const [capturing, setCapturing] = React.useState(false);
     const [recordedChunks, setRecordedChunks] = React.useState([]);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,8 +23,6 @@ export default function WebcamVideo() {
         []
     );
     const videoConstraints = {
-        width: 1280,
-        height: 800,
         facingMode: "user",
     };
 
@@ -81,13 +80,14 @@ export default function WebcamVideo() {
     }, [recordedChunks]);*/
 
     return (
-        <>
+        <div className={"flex flex-col gap-4 items-center"}>
             <Webcam
                 audio={false}
                 ref={webcamRef}
                 videoConstraints={videoConstraints}
                 screenshotQuality={1}
-                className={"rounded-md border-2 border-primary/50 max-h-[700px]"}
+                className="rounded-md border-2 border-primary/50 max-h-[calc(100vh-200px)] sm:max-h-[calc(100vh-100px)]"
+                style={{ height : isOnMobile ? "700px" : "500px"}}
             />
             <div className={"flex items-center gap-3 justify-center my-6"}>
                 {capturing ? (
@@ -103,6 +103,6 @@ export default function WebcamVideo() {
                 )}
                 {videosStored.length > 0 && <GalleryVideos videos={videosStored}/>}
             </div>
-        </>
+        </div>
     );
 }
