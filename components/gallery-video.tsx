@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Button } from "./ui/button";
 import { Download, Image as ImageIcon, Trash } from "lucide-react";
@@ -64,10 +65,10 @@ export default function GalleryVideos({ videos }: { videos: Videos[] }) {
                                     className="rounded-sm border border-foreground/20 sm:w-full sm:h-[300px]"
                                 />
                                 <div className={"flex justify-between gap-3 items-center mt-2"}>
-                                    <Button onClick={()=>handleDownload} variant={"secondary"}>
+                                    {/* <Button onClick={()=>handleDownload} variant={"secondary"}>
                                         <Download size={18}/>
                                         Download
-                                    </Button>
+                                    </Button> */}
                                     <Button
                                         size={"icon"}
                                         title="Delete picture"

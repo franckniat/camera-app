@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
-import { DM_Sans, DM_Mono } from "next/font/google";
+import { Mona_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import SwitchTheme from "@/components/switch-theme";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react"
 
-const dmSans = DM_Sans({
-	variable: "--font-dm-sans",
+const monaSans = Mona_Sans({
+	variable: "--font-mona-sans",
 	subsets: ["latin"],
-});
-
-const dmMono = DM_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
-	weight: "500",
 });
 
 export const metadata: Metadata = {
@@ -28,9 +22,9 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="fr">
+		<html lang="fr" suppressHydrationWarning>
 			<body
-				className={`${dmSans.className} ${dmMono.variable} antialiased`}
+				className={`${monaSans.className} antialiased`}
 			>
 				<ThemeProvider
 					attribute="class"
