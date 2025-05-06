@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useCallback } from 'react';
 import Webcam from "react-webcam";
 import {Button} from "@/components/ui/button";
 import {CirclePlay, CircleStop} from "lucide-react";
@@ -17,8 +17,7 @@ export default function WebcamVideo() {
     const isOnMobile = useMediaQuery('(min-width: 600px)')
     const [capturing, setCapturing] = React.useState(false);
     const [recordedChunks, setRecordedChunks] = React.useState([]);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [videosStored, setVideos, _] = useLocalStorage<Videos[]>(
+    const [videosStored, setVideos] = useLocalStorage<Videos[]>( // Updated to remove unused variable
         "videos",
         []
     );
@@ -28,13 +27,13 @@ export default function WebcamVideo() {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    const handleDataAvailable = React.useCallback(({data}) => {
+    const handleDataAvailable = useCallback(({data}) => {
         if (data.size > 0) {
             setRecordedChunks((prev) => prev.concat(data));
         }
     }, [setRecordedChunks]);
 
-    const handleStartCaptureClick = React.useCallback(() => {
+    const handleStartCaptureClick = useCallback(() => {
         setCapturing(true);
         if (webcamRef.current?.stream) {
             mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
@@ -50,7 +49,7 @@ export default function WebcamVideo() {
     }, [webcamRef, setCapturing, mediaRecorderRef, handleDataAvailable]);
 
 
-    const handleStopCaptureClick = React.useCallback(() => {
+    const handleStopCaptureClick = useCallback(() => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();
         }
@@ -59,25 +58,10 @@ export default function WebcamVideo() {
                 type: "video/webm"
             });
             setVideos([...videosStored, {src: URL.createObjectURL(blob), date: new Date()}]);
-        }
-        setCapturing(false);
-    }, [recordedChunks, setVideos, videosStored]);
-
-    /*const handleDownload = React.useCallback(() => {
-        if (recordedChunks.length) {
-            const blob = new Blob(recordedChunks, {
-                type: "video/webm"
-            });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            document.body.appendChild(a);
-            a.href = url;
-            a.download = "react-webcam-stream-capture.webm";
-            a.click();
-            window.URL.revokeObjectURL(url);
             setRecordedChunks([]);
         }
-    }, [recordedChunks]);*/
+        setCapturing(false);
+    }, [recordedChunks, setVideos, videosStored, mediaRecorderRef, setCapturing]);
 
     return (
         <div className={"flex flex-col gap-4 items-center"}>
