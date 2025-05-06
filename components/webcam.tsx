@@ -24,12 +24,12 @@ export default function WebCameraComponent() {
     const [photos, setPhotos, _] = useLocalStorage<Photos[]>("photos", []);
 	const capture = useCallback(() => {
 		const imageSrc = camera.current ? camera.current.getScreenshot() : null;
-        if (photos.length >= 10) {
-			toast.error("You can't take more than 10 photos.");
+        if (photos.length >= 20) {
+			toast.error("You can't take more than 20 photos.");
 			return;
 		}else {
 			setPhotos([...photos, {src: imageSrc, date: new Date()}]);
-        toast.success("Image captured successfully");
+        	toast.success("Image captured successfully");
 		}
 	}, [camera, photos, setPhotos]);
 
