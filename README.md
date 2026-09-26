@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web camera app
 
-## Getting Started
+Take pictures and record videos right from the browser. Everything stays on your device: captures are stored locally in IndexedDB and never uploaded.
 
-First, run the development server:
+## Features
+
+- **Photos** with self-timer (3 s / 10 s), mirror mode and a capture flash
+- **Videos** with optional sound and a recording timer (WebM, or MP4 on Safari/iOS)
+- **Camera switching** (front/back on phones, any connected webcam on desktop)
+- **Gallery**: full-screen viewer with keyboard navigation, per-item download, download everything as a `.zip`, delete with confirmation
+- **Keyboard shortcut**: <kbd>Space</kbd> takes a picture or starts/stops recording
+- **English and French** interface (`/en`, `/fr`), picked from the browser language and remembered
+- Light and dark themes
+
+## Stack
+
+- [Next.js 16](https://nextjs.org) (App Router, Turbopack, React Compiler) and React 19
+- [Tailwind CSS 4](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com)
+- Native `getUserMedia` / `MediaRecorder` APIs, [idb-keyval](https://github.com/jakearchibald/idb-keyval) for storage, [client-zip](https://github.com/Touffy/client-zip) for archives
+
+All pages are statically prerendered. Camera code is loaded on the client only, and the gallery panel is only downloaded the first time it is opened.
+
+## Getting started
+
+Requires [Bun](https://bun.sh) (or Node.js 20.9+ with npm).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command             | Description                   |
+| ------------------- | ----------------------------- |
+| `bun dev`           | Development server            |
+| `bun run build`     | Production build              |
+| `bun start`         | Serve the production build    |
+| `bun run lint`      | ESLint                        |
+| `bun run typecheck` | TypeScript                    |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Browsers only allow camera access on **HTTPS** or `localhost`. To test on a phone over your local network, use an HTTPS tunnel or `next dev --experimental-https`.
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/[lang]/              Localized pages (home, photos, videos)
+components/camera/       Camera preview, toolbar, photo and video modes
+components/gallery/      Gallery button, panel and full-screen viewer
+hooks/                   Camera stream, settings, media library
+lib/                     Storage (IndexedDB), capture helpers, i18n
+proxy.ts                 Redirects unprefixed URLs to the visitor's language
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Browser support
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Recent versions of Chrome, Edge, Firefox and Safari (desktop and mobile). Video recording uses the best format the browser supports.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](LICENSE)
