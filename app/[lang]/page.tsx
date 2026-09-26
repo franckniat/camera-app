@@ -41,7 +41,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 			</main>
 			<footer className="py-5 text-center">
 				<Link
-					href="https://fndev.vercel.app/about"
+					href="https://franckniat.me/about"
 					className="text-sm font-medium text-foreground/80 hover:underline sm:text-base"
 				>
 					{home.credits}
