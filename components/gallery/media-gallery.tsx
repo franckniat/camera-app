@@ -8,6 +8,7 @@ import { Thumbnail } from "@/components/gallery/thumbnail";
 import type { MediaLibrary } from "@/hooks/use-media-library";
 import { plural } from "@/lib/i18n/format";
 import type { MediaKind } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 // The panel (sheet, viewer, dialogs, zip) is only downloaded when first needed.
 const loadSheet = () => import("@/components/gallery/gallery-sheet");
@@ -18,10 +19,15 @@ export default function MediaGallery({
 	kind,
 	library,
 	disabled = false,
+	sheetSide = "right",
+	className,
 }: {
 	kind: MediaKind;
 	library: MediaLibrary;
 	disabled?: boolean;
+	/** Phones open the gallery from the bottom, like a native photo picker. */
+	sheetSide?: "right" | "bottom";
+	className?: string;
 }) {
 	const { lang, dict } = useI18n();
 	const [open, setOpen] = useState(false);
@@ -35,8 +41,12 @@ export default function MediaGallery({
 		<>
 			<Button
 				ref={buttonRef}
-				variant="outline"
-				className="relative size-16 overflow-hidden rounded-xl p-0"
+				variant="ghost"
+				// Always drawn on the dark camera surface, so colors don't follow the site theme.
+				className={cn(
+					"relative size-16 overflow-hidden rounded-xl border-2 border-white/80 bg-white/10 p-0 text-white hover:bg-white/20 hover:text-white focus-visible:ring-white/50 dark:hover:bg-white/20",
+					className
+				)}
 				aria-label={`${kind === "photo" ? dict.gallery.openPhotos : dict.gallery.openVideos} (${count})`}
 				aria-haspopup="dialog"
 				aria-expanded={open}
@@ -64,6 +74,7 @@ export default function MediaGallery({
 					onOpenChange={setOpen}
 					now={openedAt}
 					triggerRef={buttonRef}
+					side={sheetSide}
 				/>
 			)}
 		</>

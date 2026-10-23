@@ -1,19 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Circle, Square } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { useI18n } from "@/components/i18n-provider";
-import { CameraToolbar } from "@/components/camera/camera-toolbar";
-import { CameraView } from "@/components/camera/camera-view";
-import MediaGallery from "@/components/gallery/media-gallery";
+import { CameraShell } from "@/components/camera/camera-shell";
 import { useCamera } from "@/hooks/use-camera";
 import { useCameraSettings } from "@/hooks/use-camera-settings";
 import { useMediaLibrary } from "@/hooks/use-media-library";
 import { useSpaceShortcut } from "@/hooks/use-space-shortcut";
 import { formatDuration } from "@/lib/format";
 import { captureVideoPoster, pickRecordingType } from "@/lib/media";
-import { cn } from "@/lib/utils";
 
 type Recording = { recorder: MediaRecorder; startedAt: number };
 
@@ -105,53 +100,32 @@ export default function VideoCamera() {
 
 	useSpaceShortcut(toggleRecording);
 
-	const label = recording ? dict.camera.stopRecording : dict.camera.startRecording;
-
 	return (
-		<div className="flex flex-col items-center gap-4">
-			<CameraView camera={camera} mirrored={settings.mirrored}>
-				{recording && (
+		<CameraShell
+			mode="video"
+			camera={camera}
+			settings={settings}
+			onSettingsChange={updateSettings}
+			library={library}
+			locked={Boolean(recording)}
+			capture={{
+				label: recording ? dict.camera.stopRecording : dict.camera.startRecording,
+				disabled: camera.status !== "ready" && !recording,
+				active: Boolean(recording),
+				onPress: toggleRecording,
+			}}
+			status={
+				recording && (
 					<div
 						role="timer"
 						aria-label={dict.camera.recording}
-						className="absolute top-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 font-mono text-sm text-white tabular-nums"
+						className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 font-mono text-sm text-white tabular-nums backdrop-blur-sm"
 					>
 						<span className="size-2.5 animate-pulse rounded-full bg-red-500" />
 						{formatDuration(elapsed)}
 					</div>
-				)}
-			</CameraView>
-
-			<CameraToolbar
-				camera={camera}
-				settings={settings}
-				onChange={updateSettings}
-				mode="video"
-				locked={Boolean(recording)}
-			/>
-
-			<div className="grid w-full max-w-sm grid-cols-3 items-center">
-				<span />
-				<Button
-					size="camera"
-					variant={recording ? "outline" : "default"}
-					onClick={toggleRecording}
-					disabled={camera.status !== "ready" && !recording}
-					aria-label={label}
-					aria-pressed={Boolean(recording)}
-					title={`${label} (${dict.camera.shortcut})`}
-					className={cn("justify-self-center ring-4", recording ? "ring-red-500/30" : "ring-primary/20")}
-				>
-					{recording ? (
-						<Square className="fill-red-500 text-red-500" />
-					) : (
-						<Circle className="fill-current" />
-					)}
-				</Button>
-				<div className="justify-self-end">
-					<MediaGallery kind="video" library={library} disabled={Boolean(recording)} />
-				</div>
-			</div>
-		</div>
+				)
+			}
+		/>
 	);
 }

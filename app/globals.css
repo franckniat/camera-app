@@ -3,6 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Phones and tablets: the full-screen camera. Keep in sync with lib/device.ts. */
+@custom-variant immersive {
+	@media (max-width: 767px), (pointer: coarse) {
+		@slot;
+	}
+}
+
 :root {
 	--background: hsl(0 0% 100%);
 	--foreground: hsl(224 71.4% 4.1%);
