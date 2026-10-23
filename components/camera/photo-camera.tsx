@@ -1,12 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { CameraIcon } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { useI18n } from "@/components/i18n-provider";
-import { CameraToolbar } from "@/components/camera/camera-toolbar";
-import { CameraView } from "@/components/camera/camera-view";
-import MediaGallery from "@/components/gallery/media-gallery";
+import { CameraShell } from "@/components/camera/camera-shell";
 import { useCamera } from "@/hooks/use-camera";
 import { useCameraSettings } from "@/hooks/use-camera-settings";
 import { useMediaLibrary } from "@/hooks/use-media-library";
@@ -62,40 +58,29 @@ export default function PhotoCamera() {
 	useSpaceShortcut(takePhoto);
 
 	return (
-		<div className="flex flex-col items-center gap-4">
-			<CameraView camera={camera} mirrored={settings.mirrored}>
-				{countdown !== null && (
-					<div
-						key={countdown}
-						aria-live="assertive"
-						className="absolute inset-0 flex animate-countdown-pop items-center justify-center text-8xl font-bold text-white drop-shadow-lg"
-					>
-						{countdown}
-					</div>
-				)}
-				{flashes > 0 && (
-					<div key={flashes} className="pointer-events-none absolute inset-0 animate-camera-flash bg-white" />
-				)}
-			</CameraView>
-
-			<CameraToolbar camera={camera} settings={settings} onChange={updateSettings} mode="photo" />
-
-			<div className="grid w-full max-w-sm grid-cols-3 items-center">
-				<span />
-				<Button
-					size="camera"
-					onClick={takePhoto}
-					disabled={!ready}
-					aria-label={dict.camera.takePhoto}
-					title={`${dict.camera.takePhoto} (${dict.camera.shortcut})`}
-					className="justify-self-center ring-4 ring-primary/20"
-				>
-					<CameraIcon />
-				</Button>
-				<div className="justify-self-end">
-					<MediaGallery kind="photo" library={library} />
-				</div>
-			</div>
-		</div>
+		<CameraShell
+			mode="photo"
+			camera={camera}
+			settings={settings}
+			onSettingsChange={updateSettings}
+			library={library}
+			capture={{ label: dict.camera.takePhoto, disabled: !ready, onPress: takePhoto }}
+			overlay={
+				<>
+					{countdown !== null && (
+						<div
+							key={countdown}
+							aria-live="assertive"
+							className="absolute inset-0 flex animate-countdown-pop items-center justify-center text-8xl font-bold text-white drop-shadow-lg"
+						>
+							{countdown}
+						</div>
+					)}
+					{flashes > 0 && (
+						<div key={flashes} className="pointer-events-none absolute inset-0 animate-camera-flash bg-white" />
+					)}
+				</>
+			}
+		/>
 	);
 }

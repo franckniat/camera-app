@@ -30,6 +30,7 @@ import { downloadItem, downloadZip } from "@/lib/download";
 import { formatDuration, formatRelativeTime } from "@/lib/format";
 import { format, plural } from "@/lib/i18n/format";
 import type { MediaItem, MediaKind } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 /** Gallery panel, loaded on first open (see media-gallery.tsx). */
 export default function GallerySheet({
@@ -39,6 +40,7 @@ export default function GallerySheet({
 	onOpenChange,
 	now,
 	triggerRef,
+	side = "right",
 }: {
 	kind: MediaKind;
 	library: MediaLibrary;
@@ -48,6 +50,7 @@ export default function GallerySheet({
 	now: number;
 	/** Receives focus back when the panel closes. */
 	triggerRef: RefObject<HTMLButtonElement | null>;
+	side?: "right" | "bottom";
 }) {
 	const { lang, dict } = useI18n();
 	const { items, remove, clear } = library;
@@ -76,7 +79,8 @@ export default function GallerySheet({
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
 			<SheetContent
-				className="w-full gap-0 sm:max-w-lg"
+				side={side}
+				className={cn("gap-0", side === "bottom" ? "h-[88dvh] rounded-t-2xl" : "w-full sm:max-w-lg")}
 				closeLabel={dict.gallery.close}
 				onCloseAutoFocus={(event) => {
 					event.preventDefault();
@@ -88,7 +92,7 @@ export default function GallerySheet({
 					<SheetDescription>{count}</SheetDescription>
 				</SheetHeader>
 
-				<div className="flex-1 overflow-y-auto p-4">
+				<div className="flex-1 overflow-y-auto overscroll-contain p-4">
 					{items.length === 0 ? (
 						<p className="py-12 text-center text-sm text-muted-foreground">{dict.gallery.empty}</p>
 					) : (
@@ -141,7 +145,7 @@ export default function GallerySheet({
 				</div>
 
 				{items.length > 0 && (
-					<SheetFooter className="flex-row justify-between border-t">
+					<SheetFooter className="flex-row justify-between border-t pb-[max(env(safe-area-inset-bottom),1rem)]">
 						<Button variant="outline" onClick={handleDownloadAll}>
 							<Download />
 							{dict.gallery.downloadAll}

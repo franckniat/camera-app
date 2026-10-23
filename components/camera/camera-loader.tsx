@@ -2,13 +2,16 @@
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Before JS knows the device, CSS picks the matching placeholder (see the `immersive` variant).
 function CameraPlaceholder() {
 	return (
-		<div className="flex flex-col items-center gap-4" aria-hidden>
-			<Skeleton className="aspect-video max-h-[calc(100dvh-15rem)] min-h-48 w-full max-w-4xl rounded-xl" />
-			<Skeleton className="h-11 w-32 rounded-full" />
-			<Skeleton className="size-16 rounded-full" />
-		</div>
+		<>
+			<div className="fixed inset-0 hidden bg-black immersive:block" aria-hidden />
+			<div className="flex min-h-0 flex-1 flex-col gap-3 immersive:hidden" aria-hidden>
+				<Skeleton className="min-h-80 flex-1 rounded-2xl" />
+				<Skeleton className="mx-auto h-4 w-56" />
+			</div>
+		</>
 	);
 }
 
